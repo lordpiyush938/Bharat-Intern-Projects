@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Content Management Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1E90FF;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+
+        #contentForm {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 20px auto;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            resize: none;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #selectedFile {
+            font-weight: bold;
+        }
+
+        #contentList {
+            margin: 20px auto;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        #contentList ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        #contentList li {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 10px 0;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        label {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            cursor: pointer;
+            display: inline-block;
+            margin: 10px 0;
+            transition: background-color 0.3s;
+        }
+
+        label:hover {
+            background-color: #0056b3;
+        }
+
+        /* Additional CSS for controlling video size */
+        video {
+            width: 100%; /* Adjust to the desired width */
+            height: auto; /* Maintain aspect ratio */
+            max-height: 360px; /* Set a maximum height */
+            display: block; /* Prevent default inline behavior */
+        }
+
+        /* Adjust styles for title and content */
+        h3, p {
+            margin: 0; /* Remove default margins to make the text visible */
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center; color: #fff;">Content Management Tool</h1>
+    
+    <div id="contentForm">
+        <form id="contentForm" enctype="multipart/form-data">
+            <input type="text" id="title" name="title" placeholder="Title">
+            <textarea id="content" name="content" placeholder="Content"></textarea>
+            <label for="fileInput">Add Picture or Video</label>
+            <input type="file" id="fileInput" name="file" accept="image/*, video/*">
+            <div id="selectedFile"></div>
+            <button type="button" id="addContent">Add Content</button>
+        </form>
+    </div>
+
+    <div id="contentList">
+        <h2>Your Content</h2>
+        <ul></ul>
+    </div>
+
+    <script>
+        // JavaScript for handling user interactions and making requests to the server
+        const fileInput = document.getElementById('fileInput');
+        const selectedFile = document.getElementById('selectedFile');
+        const contentList = document.getElementById('contentList').querySelector('ul');
+        const contentForm = document.getElementById('contentForm');
+        
+        fileInput.addEventListener('change', function () {
+            if (fileInput.files.length > 0) {
+                selectedFile.innerText = `Selected File: ${fileInput.files[0].name}`;
+            } else {
+                selectedFile.innerText = '';
+            }
+        });
+
+        document.getElementById('addContent').addEventListener('click', function () {
+            const title = document.getElementById('title').value;
+            const content = document.getElementById('content').value;
+            const file = fileInput.files[0];
+
+            if (title && content && file) {
+                const listItem = document.createElement('li');
+                const listItemContent = document.createElement('div');
+                const titleElement = document.createElement('h3');
+                const contentElement = document.createElement('p');
+                const fileElement = document.createElement('video');
+
+                titleElement.textContent = title;
+                contentElement.textContent = content;
+
+                fileElement.setAttribute('controls', 'true');
+                fileElement.src = URL.createObjectURL(file);
+
+                listItemContent.appendChild(titleElement);
+                listItemContent.appendChild(contentElement);
+                listItemContent.appendChild(fileElement);
+
+                listItem.appendChild(listItemContent);
+
+                contentList.appendChild(listItem);
+
+                // Reset the form
+                contentForm.reset();
+                selectedFile.innerText = '';
+            }
+        });
+    </script>
+</body>
+</html>
